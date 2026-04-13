@@ -87,5 +87,21 @@ def _top_risk(data: dict) -> str:
 def root():
     return {"message": "ML API is running"}
 
+@app.post("/predict", response_model=PredictionResponse, summary="Predict job status")
+def predict(employee: EmployeeFeatures):
+    try:
+        data = employee.model_dump(by_alias=True)
+        data["Productivity_Change_%"] = data.pop("Productivity_Change_%")
 
+        df = pd.DataFrame([data])
 
+        proba = pipeline.predict_proba(df)[0]
+        pred_class = pipeline.predict(df)[0]
+
+        return PredictionResponse(
+            predicted_status=pred_class,
+            probabilities={cls: round(float(p), 4) for cls, p in zip(CLASSES, proba)},
+            top_risk_factor=_top_risk(data),
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
