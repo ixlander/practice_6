@@ -20,7 +20,7 @@ CAT_COLS = [
     "AI_Adoption_Level", "Automation_Risk", "Upskilling_Required", "Remote_Work",
 ]
 
-def train(data_path: str = "ai_job_impact.csv"):
+def train(data_path: str = "data/ai_job_impact.csv"):
     print(f"loading dataset: {data_path}")
     df = pd.read_csv(data_path).drop(columns=DROP_COLS, errors="ignore")
     print(f"rows: {len(df):,}  |  Columns: {df.shape[1]}")
@@ -67,6 +67,6 @@ def train(data_path: str = "ai_job_impact.csv"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data", default="ai_job_impact.csv")
+    parser.add_argument("--data", default="data/ai_job_impact.csv")
     args = parser.parse_args()
     train(args.data)
