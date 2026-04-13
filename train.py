@@ -19,3 +19,54 @@ CAT_COLS = [
     "Gender", "Education_Level", "Industry", "Job_Role",
     "AI_Adoption_Level", "Automation_Risk", "Upskilling_Required", "Remote_Work",
 ]
+
+def train(data_path: str = "ai_job_impact.csv"):
+    print(f"loading dataset: {data_path}")
+    df = pd.read_csv(data_path).drop(columns=DROP_COLS, errors="ignore")
+    print(f"rows: {len(df):,}  |  Columns: {df.shape[1]}")
+    print(f"target distribution:{df[TARGET].value_counts().to_string()}")
+
+    X = df.drop(columns=[TARGET])
+    y = df[TARGET]
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42, stratify=y
+    )
+
+    preprocessor = ColumnTransformer([
+        ("num", StandardScaler(), NUM_COLS),
+        ("cat", OneHotEncoder(handle_unknown="ignore", sparse_output=False), CAT_COLS),
+    ])
+
+    pipeline = Pipeline([
+        ("prep", preprocessor),
+        ("clf", RandomForestClassifier(
+            n_estimators=200,
+            random_state=42,
+            class_weight="balanced",
+        )),
+    ])
+
+    print("training RandomForest classifier...")
+    pipeline.fit(X_train, y_train)
+
+    y_pred = pipeline.predict(X_test)
+    print(f"accuracy : {accuracy_score(y_test, y_pred):.4f}")
+    print("classification report:")
+    print(classification_report(y_test, y_pred))
+
+    artifact = {
+        "pipeline": pipeline,
+        "num_cols": NUM_COLS,
+        "cat_cols": CAT_COLS,
+        "classes": pipeline.classes_.tolist(),
+    }
+    joblib.dump(artifact, "model.joblib")
+    print("model saved as model.joblib")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data", default="ai_job_impact.csv")
+    args = parser.parse_args()
+    train(args.data)
