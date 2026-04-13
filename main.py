@@ -68,3 +68,24 @@ class PredictionResponse(BaseModel):
     probabilities: dict[str, float]
     top_risk_factor: str
 
+
+def _top_risk(data: dict) -> str:
+    """
+        simple heuristic to surface the most notable risk factor.
+    """
+    if data["Automation_Risk"] == "High" and data["AI_Adoption_Level"] == "High":
+        return "High automation risk combined with high AI adoption in your industry"
+    if data["Automation_Risk"] == "High":
+        return "High automation risk for this role"
+    if data["AI_Adoption_Level"] == "High":
+        return "High AI adoption level in the industry"
+    if data["Upskilling_Required"] == "Yes":
+        return "Upskilling required to stay relevant"
+    return "No major risk factors detected"
+
+@app.get("/", summary="Health check")
+def root():
+    return {"message": "ML API is running"}
+
+
+
