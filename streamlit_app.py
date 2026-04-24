@@ -31,6 +31,33 @@ html, body, [class*="css"] {
     padding: 1rem 1.25rem;
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
 }
+
+.header-card h1 {
+    margin: 0;
+    color: #0f172a;
+}
+
+.header-card p {
+    margin: 0.4rem 0 0 0;
+    color: #334155;
+}
+
+section.main [data-testid="stWidgetLabel"] {
+    opacity: 1 !important;
+}
+
+section.main [data-testid="stWidgetLabel"] p,
+section.main [data-testid="stWidgetLabel"] label {
+    color: #1f2937 !important;
+    font-weight: 600;
+}
+
+section.main [data-testid="stMarkdownContainer"] p,
+section.main [data-testid="stMarkdownContainer"] h1,
+section.main [data-testid="stMarkdownContainer"] h2,
+section.main [data-testid="stMarkdownContainer"] h3 {
+    color: #0f172a;
+}
 </style>
 """,
     unsafe_allow_html=True,
@@ -39,8 +66,8 @@ html, body, [class*="css"] {
 st.markdown(
     """
 <div class="header-card">
-  <h1 style="margin:0;">AI Job Impact Predictor</h1>
-  <p style="margin:0.4rem 0 0 0; color:#334155;">Interactive frontend for your FastAPI model endpoint.</p>
+    <h1>AI Job Impact Predictor</h1>
+    <p>Interactive frontend for your FastAPI model endpoint.</p>
 </div>
 """,
     unsafe_allow_html=True,
