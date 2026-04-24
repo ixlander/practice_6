@@ -16,7 +16,8 @@ html, body, [class*="css"] {
 }
 
 .stApp {
-    background: radial-gradient(circle at 20% 10%, #ffeecf 0%, #f8fafc 35%, #e8f0ff 100%);
+    background: radial-gradient(circle at 20% 10%, #1e293b 0%, #0f172a 55%, #020617 100%);
+    color: #e5e7eb;
 }
 
 .block-container {
@@ -25,21 +26,30 @@ html, body, [class*="css"] {
 }
 
 .header-card {
-    background: rgba(255, 255, 255, 0.85);
-    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid #334155;
     border-radius: 16px;
     padding: 1rem 1.25rem;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
 .header-card h1 {
     margin: 0;
-    color: #0f172a;
+    color: #f8fafc;
 }
 
 .header-card p {
     margin: 0.4rem 0 0 0;
-    color: #334155;
+    color: #cbd5e1;
+}
+
+section[data-testid="stSidebar"] {
+    background: #111827;
+    border-right: 1px solid #334155;
+}
+
+section[data-testid="stSidebar"] * {
+    color: #e5e7eb;
 }
 
 section.main [data-testid="stWidgetLabel"],
@@ -56,8 +66,8 @@ section[data-testid="stMain"] [data-testid="stWidgetLabel"] span,
 section[data-testid="stMain"] .stNumberInput label,
 section[data-testid="stMain"] .stSelectbox label,
 section[data-testid="stMain"] .stTextInput label {
-    color: #111827 !important;
-    -webkit-text-fill-color: #111827 !important;
+    color: #e5e7eb !important;
+    -webkit-text-fill-color: #e5e7eb !important;
     font-weight: 600 !important;
     opacity: 1 !important;
     text-shadow: none !important;
@@ -67,7 +77,20 @@ section.main [data-testid="stMarkdownContainer"] p,
 section.main [data-testid="stMarkdownContainer"] h1,
 section.main [data-testid="stMarkdownContainer"] h2,
 section.main [data-testid="stMarkdownContainer"] h3 {
-    color: #0f172a;
+    color: #f8fafc;
+}
+
+section[data-testid="stMain"] input,
+section[data-testid="stMain"] textarea,
+section[data-testid="stMain"] [data-baseweb="select"] > div,
+section[data-testid="stMain"] [data-testid="stNumberInputContainer"] {
+    background: #111827;
+    color: #f8fafc;
+    border-color: #334155;
+}
+
+section[data-testid="stMain"] button {
+    border-radius: 8px;
 }
 </style>
 """,
