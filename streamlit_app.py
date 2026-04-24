@@ -213,5 +213,4 @@ if prediction_result:
     )
 
     st.subheader("Prediction Probabilities")
-    st.bar_chart(probs_df)
     st.dataframe(probs_df, use_container_width=True)
