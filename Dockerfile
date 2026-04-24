@@ -7,6 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY main.py .
 COPY train.py .
+COPY streamlit_app.py .
 COPY model.joblib .
 COPY data/ai_job_impact.csv .
 
