@@ -63,6 +63,14 @@ mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
 
 Then open: http://localhost:5000
 
+## MLflow Results (ai-job-impact-experiment2)
+
+| Run ID | Run Name | Status | Start Time | Accuracy | Precision (weighted) | Recall (weighted) | F1 (weighted) | n_estimators | test_size | random_state |
+|---|---|---|---|---:|---:|---:|---:|---:|---:|---:|
+| 06efa532141b49bc974a20b726fda4cb | random-forest-10-trees | FINISHED | 2026-04-24 16:28:19 | 0.9350 | 0.9158 | 0.9350 | 0.9216 | 10 | 0.5 | 42 |
+| 0e747265ea574ed0b6da104e70c76976 | random-forest-10-trees | FINISHED | 2026-04-24 16:27:15 | 0.9375 | 0.9000 | 0.9375 | 0.9178 | 10 | 0.2 | 42 |
+| ef803bfb20744b4897f1c8ef9f11340c | random-forest-200-trees | FINISHED | 2026-04-24 16:13:03 | 0.9325 | 0.9078 | 0.9325 | 0.9187 | 200 | 0.2 | 42 |
+
 ## Run FastAPI
 
 ```bash
