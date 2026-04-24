@@ -42,14 +42,25 @@ html, body, [class*="css"] {
     color: #334155;
 }
 
-section.main [data-testid="stWidgetLabel"] {
+section.main [data-testid="stWidgetLabel"],
+section[data-testid="stMain"] [data-testid="stWidgetLabel"] {
     opacity: 1 !important;
 }
 
 section.main [data-testid="stWidgetLabel"] p,
-section.main [data-testid="stWidgetLabel"] label {
-    color: #1f2937 !important;
-    font-weight: 600;
+section.main [data-testid="stWidgetLabel"] label,
+section.main [data-testid="stWidgetLabel"] span,
+section[data-testid="stMain"] [data-testid="stWidgetLabel"] p,
+section[data-testid="stMain"] [data-testid="stWidgetLabel"] label,
+section[data-testid="stMain"] [data-testid="stWidgetLabel"] span,
+section[data-testid="stMain"] .stNumberInput label,
+section[data-testid="stMain"] .stSelectbox label,
+section[data-testid="stMain"] .stTextInput label {
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
 }
 
 section.main [data-testid="stMarkdownContainer"] p,
@@ -139,29 +150,45 @@ if submitted:
         "Productivity_Change_%": float(productivity_change),
     }
 
+    st.session_state["prediction_result"] = None
+    st.session_state["prediction_error"] = None
+
     try:
         response = requests.post(f"{api_base_url.rstrip('/')}/predict", json=payload, timeout=20)
-        response.raise_for_status()
-        result = response.json()
-    except requests.RequestException as exc:
-        st.error(f"Prediction request failed: {exc}")
-    else:
-        st.success("Prediction completed")
-
-        status_col, factor_col = st.columns([1, 2])
-        with status_col:
-            st.metric("Predicted Job Status", result["predicted_status"])
-        with factor_col:
-            st.info(f"Top Risk Factor: {result['top_risk_factor']}")
-
-        probs_df = (
-            pd.DataFrame(
-                [{"Job_Status": label, "Probability": prob} for label, prob in result["probabilities"].items()]
+        if response.status_code != 200:
+            st.session_state["prediction_error"] = (
+                f"Prediction failed with status {response.status_code}: {response.text}"
             )
-            .sort_values("Probability", ascending=False)
-            .set_index("Job_Status")
-        )
+        else:
+            st.session_state["prediction_result"] = response.json()
+    except requests.RequestException as exc:
+        st.session_state["prediction_error"] = f"Prediction request failed: {exc}"
+    except ValueError as exc:
+        st.session_state["prediction_error"] = f"Prediction response could not be parsed as JSON: {exc}"
 
-        st.subheader("Prediction Probabilities")
-        st.bar_chart(probs_df)
-        st.dataframe(probs_df, use_container_width=True)
+prediction_error = st.session_state.get("prediction_error")
+prediction_result = st.session_state.get("prediction_result")
+
+if prediction_error:
+    st.error(prediction_error)
+
+if prediction_result:
+    st.success("Prediction completed")
+
+    status_col, factor_col = st.columns([1, 2])
+    with status_col:
+        st.metric("Predicted Job Status", prediction_result["predicted_status"])
+    with factor_col:
+        st.info(f"Top Risk Factor: {prediction_result['top_risk_factor']}")
+
+    probs_df = (
+        pd.DataFrame(
+            [{"Job_Status": label, "Probability": prob} for label, prob in prediction_result["probabilities"].items()]
+        )
+        .sort_values("Probability", ascending=False)
+        .set_index("Job_Status")
+    )
+
+    st.subheader("Prediction Probabilities")
+    st.bar_chart(probs_df)
+    st.dataframe(probs_df, use_container_width=True)
